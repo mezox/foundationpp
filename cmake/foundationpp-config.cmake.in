@@ -1,0 +1,11 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+# Find required frameworks
+find_library(FOUNDATION_FRAMEWORK Foundation REQUIRED)
+find_library(OBJC_LIBRARY objc REQUIRED)
+
+include("${CMAKE_CURRENT_LIST_DIR}/foundationpp-targets.cmake")
+
+check_required_components(foundationpp)

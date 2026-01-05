@@ -1,0 +1,36 @@
+# foundationpp.exports
+# Symbol export list for libfoundationpp shared library
+# Format: One symbol per line (without leading underscore for Darwin)
+# Comments starting with # and empty lines are ignored
+
+# =============================================================================
+# Module Initialization Symbols
+# =============================================================================
+# These are required for C++20 module initialization
+
+_ZGIW12foundationpp
+_ZGIW12foundationppWP5types
+_ZGIW12foundationppWP6object
+_ZGIW12foundationppWP6memory
+_ZGIW12foundationppWP6string
+_ZGIW12foundationppWP11collections
+_ZGIW12foundationppWP4data
+_ZGIW12foundationppWP5error
+_ZGIW12foundationppWP4time
+_ZGIW12foundationppWP6bundle
+_ZGIW12foundationppWP7process
+_ZGIW12foundationppWP11concurrency
+_ZGIW12foundationppWP12notification
+
+# Internal partitions (not re-exported via module interface, but needed for runtime)
+_ZGIW12foundationppWP6detail
+_ZGIW12foundationppWP7runtime
+
+# =============================================================================
+# NS::v1 Namespace Symbols
+# =============================================================================
+# All public API symbols in the NS::v1 namespace
+# Using wildcard pattern to match all class methods and template instantiations
+
+_ZN2NS2v1*
+_ZNK2NS2v1*
