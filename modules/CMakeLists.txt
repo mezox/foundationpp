@@ -21,58 +21,82 @@ set(FOUNDATIONPP_PRIMARY_MODULE
     foundationpp.cppm
 )
 
-# Determine library type
-if(FOUNDATIONPP_BUILD_SHARED)
-    add_library(foundationpp SHARED)
-else()
-    add_library(foundationpp STATIC)
+# Validate that at least one library type is enabled
+if(NOT FOUNDATIONPP_BUILD_SHARED AND NOT FOUNDATIONPP_BUILD_STATIC)
+    message(FATAL_ERROR "At least one of FOUNDATIONPP_BUILD_SHARED or FOUNDATIONPP_BUILD_STATIC must be enabled")
 endif()
 
-# Add module sources
-target_sources(foundationpp
-    PUBLIC FILE_SET CXX_MODULES TYPE CXX_MODULES
-    BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
-    FILES
-        ${FOUNDATIONPP_PRIMARY_MODULE}
-        ${FOUNDATIONPP_MODULE_PARTITIONS}
-)
+# Function to configure a foundationpp library target
+function(configure_foundationpp_target target_name library_type)
+    add_library(${target_name} ${library_type})
 
-# Link dependencies
-target_link_libraries(foundationpp
-    PUBLIC
-        std
-        ${FOUNDATION_FRAMEWORK}
-        ${OBJC_LIBRARY}
-)
-
-# Compiler options
-target_compile_options(foundationpp
-    PRIVATE
-        -Wall
-        -Wextra
-        -Wpedantic
-        -Wno-reserved-module-identifier
-        -Wno-reserved-user-defined-literal
-)
-
-# Safe message dispatch option
-if(FOUNDATIONPP_SAFE_MESSAGES)
-    target_compile_definitions(foundationpp PRIVATE FOUNDATIONPP_SAFE_MESSAGES=1)
-endif()
-
-# Target properties
-set_target_properties(foundationpp PROPERTIES
-    CXX_STANDARD 23
-    CXX_STANDARD_REQUIRED ON
-    CXX_EXTENSIONS OFF
-    CXX_SCAN_FOR_MODULES ON
-    VERSION ${PROJECT_VERSION}
-    SOVERSION ${PROJECT_VERSION_MAJOR}
-)
-
-if(FOUNDATIONPP_BUILD_SHARED)
-    include(${CMAKE_SOURCE_DIR}/cmake/SymbolExports.cmake)
-    add_symbol_exports(foundationpp
-        "${CMAKE_CURRENT_SOURCE_DIR}/foundationpp.exports"
+    # Add module sources
+    target_sources(${target_name}
+        PUBLIC FILE_SET CXX_MODULES TYPE CXX_MODULES
+        BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
+        FILES
+            ${FOUNDATIONPP_PRIMARY_MODULE}
+            ${FOUNDATIONPP_MODULE_PARTITIONS}
     )
+
+    # Link dependencies
+    target_link_libraries(${target_name}
+        PUBLIC
+            std
+            ${FOUNDATION_FRAMEWORK}
+            ${OBJC_LIBRARY}
+    )
+
+    # Compiler options
+    target_compile_options(${target_name}
+        PRIVATE
+            -Wall
+            -Wextra
+            -Wpedantic
+            -Wno-reserved-module-identifier
+            -Wno-reserved-user-defined-literal
+    )
+
+    # Safe message dispatch option
+    if(FOUNDATIONPP_SAFE_MESSAGES)
+        target_compile_definitions(${target_name} PRIVATE FOUNDATIONPP_SAFE_MESSAGES=1)
+    endif()
+
+    # Target properties
+    set_target_properties(${target_name} PROPERTIES
+        CXX_STANDARD 23
+        CXX_STANDARD_REQUIRED ON
+        CXX_EXTENSIONS OFF
+        CXX_SCAN_FOR_MODULES ON
+        VERSION ${PROJECT_VERSION}
+        SOVERSION ${PROJECT_VERSION_MAJOR}
+        OUTPUT_NAME foundationpp
+    )
+
+    # Symbol exports for shared libraries
+    if(library_type STREQUAL "SHARED")
+        include(${CMAKE_SOURCE_DIR}/cmake/SymbolExports.cmake)
+        add_symbol_exports(${target_name}
+            "${CMAKE_CURRENT_SOURCE_DIR}/foundationpp.exports"
+        )
+    endif()
+endfunction()
+
+# Build shared library
+if(FOUNDATIONPP_BUILD_SHARED)
+    configure_foundationpp_target(foundationpp_shared SHARED)
+    add_library(foundationpp::shared ALIAS foundationpp_shared)
+endif()
+
+# Build static library
+if(FOUNDATIONPP_BUILD_STATIC)
+    configure_foundationpp_target(foundationpp_static STATIC)
+    add_library(foundationpp::static ALIAS foundationpp_static)
+endif()
+
+# Create default alias (prefer shared if available)
+if(FOUNDATIONPP_BUILD_SHARED)
+    add_library(foundationpp ALIAS foundationpp_shared)
+elseif(FOUNDATIONPP_BUILD_STATIC)
+    add_library(foundationpp ALIAS foundationpp_static)
 endif()
