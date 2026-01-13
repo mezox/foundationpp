@@ -6,6 +6,10 @@
 
 export module foundationpp;
 
+// Re-export std module for types used in public interfaces
+// (std::expected, std::string, std::intptr_t, etc.)
+export import std;
+
 // Re-export all public partitions
 export import :types;
 export import :object;
