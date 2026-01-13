@@ -19,7 +19,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Options
 option(FOUNDATIONPP_BUILD_SHARED "Build shared library" ON)
 option(FOUNDATIONPP_BUILD_STATIC "Build static library" OFF)
-option(FOUNDATIONPP_BUILD_TESTS "Build tests" OFF)
 option(FOUNDATIONPP_SAFE_MESSAGES "Enable runtime selector checks with assertions" OFF)
 
 # Find required frameworks
@@ -37,9 +36,3 @@ endif()
 
 # Build the modules
 add_subdirectory(modules)
-
-# Tests
-if(FOUNDATIONPP_BUILD_TESTS AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test")
-    enable_testing()
-    add_subdirectory(test)
-endif()
