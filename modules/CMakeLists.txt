@@ -68,6 +68,8 @@ function(configure_foundationpp_target target_name library_type)
         CXX_STANDARD_REQUIRED ON
         CXX_EXTENSIONS OFF
         CXX_SCAN_FOR_MODULES ON
+        CXX_VISIBILITY_PRESET default
+        VISIBILITY_INLINES_HIDDEN OFF
         VERSION ${PROJECT_VERSION}
         SOVERSION ${PROJECT_VERSION_MAJOR}
         OUTPUT_NAME foundationpp

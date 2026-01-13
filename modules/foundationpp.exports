@@ -34,3 +34,19 @@ _ZGIW12foundationppWP7runtime
 
 _ZN2NS2v1*
 _ZNK2NS2v1*
+
+# =============================================================================
+# NS::Detail::v1 Namespace Symbols (Internal)
+# =============================================================================
+# Internal implementation symbols needed for runtime linking
+
+_ZN2NS6Detail2v1*
+_ZNK2NS6Detail2v1*
+
+# =============================================================================
+# NS::Runtime::v1 Namespace Symbols (Internal)
+# =============================================================================
+# Runtime helper functions
+
+_ZN2NS7Runtime2v1*
+_ZNK2NS7Runtime2v1*

@@ -86,21 +86,24 @@ template<typename Ret, typename... Args>
     if constexpr (SafeMessagesEnabled) {
         assert(detail::objectRespondsToSelector(obj, sel) && "Object does not respond to selector");
     }
+    // Use std::decay_t to strip reference qualifiers from Args
+    // This is necessary because Args&&... deduces lvalue references for lvalue arguments,
+    // but C function pointers need value types, not reference types
     if constexpr (std::is_void_v<Ret>) {
-        using Proc = void(*)(const void*, SEL, Args...);
+        using Proc = void(*)(const void*, SEL, std::decay_t<Args>...);
         auto proc = reinterpret_cast<Proc>(&objc_msgSend);
         (*proc)(obj, sel, std::forward<Args>(args)...);
     }
 #if defined(__x86_64__) || defined(__i386__)
     else if constexpr (DispatchTraits<Ret>::requires_fpret) {
-        using Proc = Ret(*)(const void*, SEL, Args...);
+        using Proc = Ret(*)(const void*, SEL, std::decay_t<Args>...);
         auto proc = reinterpret_cast<Proc>(&objc_msgSend_fpret);
         return (*proc)(obj, sel, std::forward<Args>(args)...);
     }
 #endif
 #if !defined(__arm64__)
     else if constexpr (DispatchTraits<Ret>::requires_stret) {
-        using Proc = void(*)(Ret*, const void*, SEL, Args...);
+        using Proc = void(*)(Ret*, const void*, SEL, std::decay_t<Args>...);
         auto proc = reinterpret_cast<Proc>(&objc_msgSend_stret);
         Ret result;
         (*proc)(&result, obj, sel, std::forward<Args>(args)...);
@@ -108,7 +111,7 @@ template<typename Ret, typename... Args>
     }
 #endif
     else {
-        using Proc = Ret(*)(const void*, SEL, Args...);
+        using Proc = Ret(*)(const void*, SEL, std::decay_t<Args>...);
         auto proc = reinterpret_cast<Proc>(&objc_msgSend);
         return (*proc)(obj, sel, std::forward<Args>(args)...);
     }
