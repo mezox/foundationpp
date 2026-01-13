@@ -60,8 +60,11 @@ if(FOUNDATIONPP_SAFE_MESSAGES)
     target_compile_definitions(foundationpp PRIVATE FOUNDATIONPP_SAFE_MESSAGES=1)
 endif()
 
-# Enable module scanning
+# Target properties
 set_target_properties(foundationpp PROPERTIES
+    CXX_STANDARD 23
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
     CXX_SCAN_FOR_MODULES ON
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}

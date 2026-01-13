@@ -11,11 +11,6 @@ if(NOT APPLE)
     message(FATAL_ERROR "foundationpp requires Apple platforms (macOS/iOS/tvOS/watchOS)")
 endif()
 
-# Require C++23
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 # Options
 option(FOUNDATIONPP_BUILD_SHARED "Build shared library" ON)
 option(FOUNDATIONPP_BUILD_STATIC "Build static library" OFF)

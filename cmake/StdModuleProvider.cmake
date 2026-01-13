@@ -126,6 +126,9 @@ function(_std_module_create_libcxx module_path include_path)
         target_include_directories(std SYSTEM PUBLIC "${include_path}")
     endif()
     set_target_properties(std PROPERTIES
+        CXX_STANDARD 23
+        CXX_STANDARD_REQUIRED ON
+        CXX_EXTENSIONS OFF
         CXX_SCAN_FOR_MODULES ON
     )
 
