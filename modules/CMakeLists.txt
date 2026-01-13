@@ -75,7 +75,7 @@ function(configure_foundationpp_target target_name library_type)
 
     # Symbol exports for shared libraries
     if(library_type STREQUAL "SHARED")
-        include(${CMAKE_SOURCE_DIR}/cmake/SymbolExports.cmake)
+        include(${PROJECT_SOURCE_DIR}/cmake/SymbolExports.cmake)
         add_symbol_exports(${target_name}
             "${CMAKE_CURRENT_SOURCE_DIR}/foundationpp.exports"
         )
